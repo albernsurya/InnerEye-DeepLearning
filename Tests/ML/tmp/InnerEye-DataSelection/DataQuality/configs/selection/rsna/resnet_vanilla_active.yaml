@@ -1,0 +1,7 @@
+selector:
+  type: ['PosteriorBasedSelector']
+  model_name: 'Vanilla (heavy aug) Active'
+  model_config_path: 'DataQuality/configs/models/rsna/resnet.yaml'
+  use_active_relabelling: True
+tensorboard:
+  save_events: False

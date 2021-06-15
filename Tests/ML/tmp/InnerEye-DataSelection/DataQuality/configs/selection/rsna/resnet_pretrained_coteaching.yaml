@@ -1,0 +1,7 @@
+selector:
+  type: ['PosteriorBasedSelector']
+  model_name: 'SSL+Coteaching'
+  model_config_path: 'DataQuality/configs/models/rsna/resnet_pretrained_coteaching.yaml'
+  use_active_relabelling: False
+tensorboard:
+  save_events: False

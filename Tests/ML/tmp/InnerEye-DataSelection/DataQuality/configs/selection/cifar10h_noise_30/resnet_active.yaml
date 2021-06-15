@@ -1,0 +1,7 @@
+selector:
+  type: ['PosteriorBasedSelector']
+  model_name: 'Vanilla-Active'
+  model_config_path: 'DataQuality/configs/models/cifar10h_noise_30/resnet.yaml'
+  use_active_relabelling: True
+tensorboard:
+  save_events: False

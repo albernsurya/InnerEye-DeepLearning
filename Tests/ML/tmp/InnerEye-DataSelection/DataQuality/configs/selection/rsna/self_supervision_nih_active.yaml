@@ -1,0 +1,7 @@
+selector:
+  type: ['PosteriorBasedSelector']
+  model_name: "SSL+Linear+Active"
+  model_config_path: 'DataQuality/configs/models/rsna/self_supervised_nih.yaml'
+  use_active_relabelling: True
+tensorboard:
+  save_events: False

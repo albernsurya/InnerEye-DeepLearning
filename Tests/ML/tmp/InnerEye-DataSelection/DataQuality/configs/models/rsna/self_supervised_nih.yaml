@@ -1,0 +1,48 @@
+device: cuda:3
+cudnn:
+  benchmark: True
+  deterministic: True
+dataset:
+  name: NoisyChestXray
+  dataset_dir: /datadrive/rsna_train
+  n_channels: 3
+  n_classes: 2
+  cxr_consolidation_noise_rate: 0.10
+train:
+  use_balanced_sampler: True
+  pretrained: False
+  seed: 5
+  batch_size: 32
+  optimizer: adam
+  base_lr: 1e-4
+  output_dir: rsna/nih10/ssl_999
+  tanh_regularisation: 0.40
+  use_self_supervision: True
+  self_supervision:
+    freeze_encoder: True
+    checkpoints: ["logs/nih/ssup/byol_seed_3/checkpoints/epoch=999.ckpt"]
+  use_co_teaching: False
+  log_period: 5
+  checkpoint_period: 10
+  dataloader:
+    num_workers: 6
+    drop_last: False
+    pin_memory: False
+validation:
+  batch_size: 50
+  dataloader:
+    num_workers: 6
+    drop_last: False
+    pin_memory: False
+scheduler:
+  epochs: 100
+  type: multistep
+  milestones: [10]
+  lr_decay: 0.1
+preprocess:
+  center_crop_size: 224
+  resize: 256
+augmentation:
+  use_random_horizontal_flip: True
+  use_random_affine: False
+  use_random_color: False

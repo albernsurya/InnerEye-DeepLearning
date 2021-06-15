@@ -1,0 +1,6 @@
+selector:
+  type: ['PosteriorBasedSelector']
+  model_name: 'Vanilla'
+  model_config_path: 'DataQuality/configs/models/rsna/resnet.yaml'
+tensorboard:
+  save_events: False
