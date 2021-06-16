@@ -169,7 +169,6 @@ class PosteriorBasedSelector(LabelDistributionBasedSampler):
         # Change the drop rate depending on the number of corrected.
         if isinstance(self.trainer, CoTeachingTrainer):
             cfg = self.update_coteaching_forget_rate(cfg)
-        cfg.freeze()
 
         # Update ground-truth labels used in training
         dataset.targets = np.argmax(self.current_labels, axis=1)  # type: ignore
