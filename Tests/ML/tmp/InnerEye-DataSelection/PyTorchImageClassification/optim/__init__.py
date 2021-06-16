@@ -1,8 +1,5 @@
 import torch
 
-from .adabound import AdaBound, AdaBoundW
-from .lars import LARSOptimizer
-
 
 def get_param_list(config, model):
     if config.train.no_weight_decay_on_bn:
@@ -43,24 +40,6 @@ def create_optimizer(config, model):
                                      lr=config.train.base_lr,
                                      betas=config.optim.adam.betas,
                                      amsgrad=True)
-    elif config.train.optimizer == 'adabound':
-        optimizer = AdaBound(params,
-                             lr=config.train.base_lr,
-                             betas=config.optim.adabound.betas,
-                             final_lr=config.optim.adabound.final_lr,
-                             gamma=config.optim.adabound.gamma)
-    elif config.train.optimizer == 'adaboundw':
-        optimizer = AdaBoundW(params,
-                              lr=config.train.base_lr,
-                              betas=config.optim.adabound.betas,
-                              final_lr=config.optim.adabound.final_lr,
-                              gamma=config.optim.adabound.gamma)
-    elif config.train.optimizer == 'lars':
-        optimizer = LARSOptimizer(params,
-                                  lr=config.train.base_lr,
-                                  momentum=config.train.momentum,
-                                  eps=config.optim.lars.eps,
-                                  thresh=config.optim.lars.threshold)
     else:
         raise ValueError()
     return optimizer

@@ -52,7 +52,7 @@ config.train.checkpoint = ''
 config.train.resume_epoch = 0
 config.train.restore_scheduler = True
 config.train.batch_size = 128
-# optimizer (options: sgd, adam, lars, adabound, adaboundw)
+# optimizer (options: sgd, adam)
 config.train.optimizer = 'sgd'
 config.train.base_lr = 0.1
 config.train.momentum = 0.9
@@ -96,11 +96,7 @@ config.optim.adam.betas = (0.9, 0.999)
 config.optim.lars = ConfigNode()
 config.optim.lars.eps = 1e-9
 config.optim.lars.threshold = 1e-2
-# AdaBound
-config.optim.adabound = ConfigNode()
-config.optim.adabound.betas = (0.9, 0.999)
-config.optim.adabound.final_lr = 0.1
-config.optim.adabound.gamma = 1e-3
+
 
 # scheduler
 config.scheduler = ConfigNode()
