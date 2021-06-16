@@ -152,38 +152,27 @@ class PosteriorBasedSelector(LabelDistributionBasedSampler):
         # Inputs
         dataset = self.trainer.train_loader.dataset
 
-        learning_rate = 0.0025  # for CXR experiments: 1e-5 for SSL, 1e-6 for vanilla
+        learning_rate = 0.0025
         num_epochs = 20
         logging.info(f"Learning rate: {learning_rate} - num finetuning epochs: {num_epochs}")
 
         # Create a dataset and dataloader object.
-        logging.info(f"Updating posteriors, number of relabels count: {iteration_id}")
         assert hasattr(dataset, "targets")
         dataset.targets = np.argmax(self.current_labels, axis=1)  # type: ignore
 
-        old = dataset.targets.copy()  # type: ignore
-        dataset.targets = np.argmax(self.current_labels, axis=1)  # type: ignore
-        # Changed since last update beliefs
-        number_changed = (old != dataset.targets).sum()  # type: ignore
-        # Total changed
-        self.total_updated_cases += number_changed
-        logging.info(f"Total updated labels {number_changed}")
         # Assign a new optimiser and scheduler for fine-tuning.
         cfg = self.trainer.config.clone()
         cfg.defrost()
         cfg.train.base_lr = learning_rate
+
         if cfg.train.use_co_teaching:
-            gain_accuracy = float(self.total_updated_cases) / len(dataset)  # type: ignore
-            logging.info(f"Total gain accuracy since start {gain_accuracy}")
-            # Update our coteaching belief
-            cfg.train.co_teaching_forget_rate -= gain_accuracy
-            logging.info(f"New co-teaching drop rate {cfg.train.co_teaching_forget_rate}")
             self.trainer.forget_rate_scheduler = ForgetRateScheduler(  # type: ignore
                 cfg.scheduler.epochs,
                 forget_rate=cfg.train.co_teaching_forget_rate,
                 num_gradual=0,
                 start_epoch=0,
                 num_warmup_epochs=0)
+
         self.trainer.schedulers = [torch.optim.lr_scheduler.LambdaLR(
             create_optimizer(cfg, model), lambda x: 1) for model in self.trainer.models]
 

@@ -13,8 +13,7 @@ from DataQuality.deep_learning.model_trainer_base import ModelTrainer
 from DataQuality.deep_learning.vanilla_trainer import VanillaTrainer
 from DataQuality.evaluation.metrics import compute_model_disagreement_score
 from DataQuality.selection.selectors.base import SampleSelector
-from pytorch_image_classification import create_optimizer
-
+from PyTorchImageClassification.optim import create_optimizer
 
 class BaldSelector(SampleSelector):
     """
@@ -35,7 +34,7 @@ class BaldSelector(SampleSelector):
 
         # Active cleaning parameters - model updates:
         self.current_labels = np.zeros_like(posteriors[0])
-        self.update_milestones = [1000 * ii for ii in range(1, 20)]
+        self.update_milestones = [500 * ii for ii in range(1, 20)]
         self.trainer = trainer
 
     def get_relabelling_scores(self, current_labels: np.ndarray) -> np.ndarray:
