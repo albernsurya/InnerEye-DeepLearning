@@ -58,9 +58,8 @@ our label cleaning framework on medical dataset, we have sampled a small subset 
 for which we have access to the original labels provided in the NIH dataset. This dataset uses the kaggle dataset with noisy labels
 as the original labels from RSNA and the clean labels are the Kaggle labels. Originally the dataset had 14 classes, we 
 created a new binary label to label each image as "pneumonia-like" or "non-pneumonia-like" depending on the original label
-prior to adjudication. The original (binarized) labels along with their corresponding adjudicated label, can be found in
-the [noisy_chestxray_dataset.csv](DataQuality/datasets/noisy_chestxray_dataset.csv) file. The dataset class for this dataset
-is the [rsna_cxr.py](DataQuality/datasets/rsna_cxr.py) file. This dataset class will automatically load the labels
+prior to adjudication. The original (binarized) labels along with their corresponding adjudicated label, can be created with [create_noisy_chestxray_dataset.py](DataQuality/datasets/create_noisy_chestxray_dataset.py). The dataset class for this dataset
+is the [noisy_kaggle_cxr.py](DataQuality/datasets//noisy_kaggle_cxr.py) file. This dataset class will automatically load the labels
 from the aforementioned file.
 
 ###### How to use it 
