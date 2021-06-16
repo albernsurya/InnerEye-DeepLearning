@@ -11,6 +11,7 @@ import torch
 
 from DataQuality.deep_learning.dataloader import get_train_dataloader, get_val_dataloader
 from DataQuality.deep_learning.model_trainer_base import ModelTrainer
+from DataQuality.deep_learning.co_teaching_trainer import CoTeachingTrainer
 from DataQuality.evaluation.metrics import cross_entropy, max_prediction_error
 from DataQuality.selection.selectors.base import SampleSelector
 from PyTorchImageClassification.optim import create_optimizer
@@ -157,22 +158,21 @@ class PosteriorBasedSelector(LabelDistributionBasedSampler):
         logging.info(f"Learning rate: {learning_rate} - num finetuning epochs: {num_epochs}")
 
         # Create a dataset and dataloader object.
+        logging.info(f"Updating posteriors, number of relabels count: {iteration_id}")
         assert hasattr(dataset, "targets")
-        dataset.targets = np.argmax(self.current_labels, axis=1)  # type: ignore
 
         # Assign a new optimiser and scheduler for fine-tuning.
         cfg = self.trainer.config.clone()
         cfg.defrost()
         cfg.train.base_lr = learning_rate
 
-        if cfg.train.use_co_teaching:
-            self.trainer.forget_rate_scheduler = ForgetRateScheduler(  # type: ignore
-                cfg.scheduler.epochs,
-                forget_rate=cfg.train.co_teaching_forget_rate,
-                num_gradual=0,
-                start_epoch=0,
-                num_warmup_epochs=0)
+        # Change the drop rate depending on the number of corrected.
+        if isinstance(self.trainer, CoTeachingTrainer):
+            cfg = self.update_coteaching_forget_rate(cfg)
+        cfg.freeze()
 
+        # Update ground-truth labels used in training
+        dataset.targets = np.argmax(self.current_labels, axis=1)  # type: ignore
         self.trainer.schedulers = [torch.optim.lr_scheduler.LambdaLR(
             create_optimizer(cfg, model), lambda x: 1) for model in self.trainer.models]
 
@@ -194,3 +194,25 @@ class PosteriorBasedSelector(LabelDistributionBasedSampler):
         val_tracker = self.trainer.run_inference(dataloader=self.trainer.val_loader, use_mc_sampling=False)[0]
         logging.info(f"{self.name} - Test avg acc: {val_tracker.sample_metrics.get_average_accuracy()}")
         logging.info(f"{self.name} - Test avg loss: {val_tracker.sample_metrics.get_average_loss()}")
+
+    def update_coteaching_forget_rate(self, cfg):
+        """
+        Updates the expected noise rate based on the number of already correct samples.
+        """
+        dataset = self.trainer.train_loader.dataset
+        new_labels = np.argmax(self.current_labels, axis=1)
+        number_changed = (new_labels != dataset.targets).sum()
+        self.total_updated_cases += number_changed  # Total changed
+        gain_accuracy = float(self.total_updated_cases) / len(dataset)  # type: ignore
+        cfg.train.co_teaching_forget_rate -= gain_accuracy              # Update our coteaching belief
+        logging.info(f"Total gain accuracy since start {gain_accuracy}")
+        logging.info(f"New co-teaching drop rate {cfg.train.co_teaching_forget_rate}")
+        self.trainer.forget_rate_scheduler = ForgetRateScheduler(  # type: ignore
+                cfg.scheduler.epochs,
+                forget_rate=cfg.train.co_teaching_forget_rate,
+                num_gradual=0,
+                start_epoch=0,
+                num_warmup_epochs=0)
+
+        return cfg
+

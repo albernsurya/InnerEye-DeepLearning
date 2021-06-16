@@ -26,11 +26,11 @@ pip install -e .
 <br />
 
 ## Rebuttal Experiments:
-Early Learning Regularization (ELR) for noise-robust learning is implemented here: [elr_trainer.py](DataQuality\deep_learning\elr_trainer.py)
+Early Learning Regularization (ELR) for noise-robust learning is implemented here: [elr_trainer.py](DataQuality/deep_learning/elr_trainer.py)
 
-Deep Bayesian Active Learning with Image Data: [bald.py](DataQuality\selection\selectors\bald.py)
+Deep Bayesian Active Learning with Image Data: [bald.py](DataQuality/selection/selectors/bald.py)
 
-The remaining sample scoring functions and noise-robust learning techniques can be found at: [Link1](DataQuality\selection\selectors), [Link2](DataQuality\deep_learning).
+The remaining sample scoring functions and noise-robust learning techniques can be found at: [Link1](DataQuality/selection/selectors), [Link2](DataQuality/deep_learning).
 <br /><br />
 
 ## Datasets:
