@@ -15,5 +15,5 @@ setup(name='DataQuality',
           "h5py",
           "pandas",
       ],
-      packages=find_packages(exclude=('tests', 'docs', 'build', 'PyTorchImageClassification'))
+      packages=find_packages(exclude=('tests', 'docs', 'build'))
       )

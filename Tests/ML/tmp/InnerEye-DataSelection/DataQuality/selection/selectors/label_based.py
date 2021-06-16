@@ -35,8 +35,8 @@ class LabelDistributionBasedSampler(SampleSelector):
                  embeddings: Optional[np.ndarray] = None,
                  trainer: Optional[ModelTrainer] = None,
                  **kwargs: Any):
-        super().__init__(num_samples=num_samples, allow_repeat_samples=allow_repeat_samples, embeddings=embeddings,
-                         **kwargs)
+        super().__init__(num_samples=num_samples, allow_repeat_samples=allow_repeat_samples,
+                        embeddings=embeddings, **kwargs)
 
         self.trainer = trainer
         self.decision_rule = decision_rule
