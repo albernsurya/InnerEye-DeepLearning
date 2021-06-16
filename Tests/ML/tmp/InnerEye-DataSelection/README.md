@@ -2,10 +2,12 @@
  
 #### Table of contents
 * Installation
+* Rebuttal Experiments
 * Datasets
 * How to train models
 * How to run the main label cleaning simulation
 * Code for additional paper experiments
+<br /><br />
 
 ## Installation:
 
@@ -21,13 +23,17 @@ python create_environment.py
 conda activate DataQuality
 pip install -e .
 ```
-
-Linters:
-
-Please make sure that `Autopep8` and `Flake8` are activated in your IDE (e.g. VS-Code or Pycharm)<br />
 <br />
 
-## Datasets
+## Rebuttal Experiments:
+Early Learning Regularization (ELR) for noise-robust learning is implemented here: [elr_trainer.py](DataQuality\deep_learning\elr_trainer.py)
+
+Deep Bayesian Active Learning with Image Data: [bald.py](DataQuality\selection\selectors\bald.py)
+
+The remaining sample scoring functions and noise-robust learning techniques can be found at: [Link1](DataQuality\selection\selectors), [Link2](DataQuality\deep_learning).
+<br /><br />
+
+## Datasets:
 ### CIFAR10H
 ###### About
 The CIFAR10H dataset is the CIFAR10 test set but all the samples have been labelled by multiple annotators.
@@ -65,8 +71,9 @@ from the aforementioned file.
 ###### How to use it 
 The code will assume that the Kaggle dataset is present on your machine (see dataset above for instructions) and that 
 your config points to the correct `dataset_dir` location. 
+<br /><br />
 
-## How to train models
+## How to train models:
 ### Supervised models
 #### General
 The main entry point for training a supervised model (vanilla or coteaching) is [train.py](DataQuality/deep_learning/train.py). 
@@ -90,8 +97,9 @@ To run any model on this dataset, you will need to first make sure you have the 
 In order to run:
 * Vanilla training on the dataset with 13% noise please use the [DataQuality/configs/models/rsna/resnet.yaml](DataQuality/configs/models/rsna/resnet.yaml) config.
 * co-teaching densenet121 training:  [DataQuality/configs/models/rsna/resnet_coteaching.yaml](DataQuality/configs/models/rsna/resnet_coteaching.yaml) config
- 
-### How to pretrain embeddings with an unsupervised model
+ <br /><br />
+
+## How to pretrain models with self-supervision:
 #### General
 For the unsupervised training of our models, we rely on PyTorch Lightning and Pytorch Lightining bolts. The main entry point
 for model training is [DataQuality/deep_learning/self_supervised/main.py](DataQuality/deep_learning/self_supervised/main.py).
@@ -126,18 +134,17 @@ config.
 
 To train a co-teaching model from a pretrained set of SSL weights, you can use [DataQuality/configs/models/rsna/resnet_pretrained_coteaching.yaml](DataQuality/configs/models/rsna/resnet_pretrained_coteaching.yaml)
 config.
+<br /><br />
 
-## How to run the main label cleaning simulation
-To run the label cleaning simulation you will need to run [main_simulation](DataQuality/main_simulation.py) with
-a list of configs in the `--config` arguments as well as a list of seeds to use for sampling in the `--seeds` arguments.
+## How to run the main label cleaning simulation:
+To run the label cleaning simulation you will need to run [main_simulation](DataQuality/main_simulation.py) with a list of configs in the `--config` arguments as well as a list of seeds to use for sampling in the `--seeds` arguments.
 
 ```
 python DataQuality/main_simulation.py --config DataQuality/configs/selection/YOU_CONFIG_CHOICE1 DataQuality/configs/selection/YOU_CONFIG_CHOICE2 --seeds 1 2 3
 ```
-You will need to provide a list of `selector_configs` as config arguments. A selector config will allow you to specify which
-selector to use and which model config to use for inference. All selectors config can be found in the 
-[configs/selection](DataQuality/configs/selection) folder. 
+You will need to provide a list of `selector_configs` as config arguments. A selector config will allow you to specify which selector to use and which model config to use for inference. All selectors config can be found in the [configs/selection](DataQuality/configs/selection) folder. 
+<br /><br />
 
-## Code for additional paper experiments
+## Code for additional paper experiments:
 We also provide the code used to run additional experiments in the paper. In particular, we provide the code for the model selection
 section in  [DataQuality/model_selection_benchmark.py](DataQuality/model_selection_benchmark.py)
