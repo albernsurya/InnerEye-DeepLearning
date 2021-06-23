@@ -135,7 +135,6 @@ def log_metrics(val_metrics: Optional[InferenceMetricsForSegmentation],
         split.log_metrics(run_context)
 
 
-class MLRunner:
 
     def __init__(self,
                  model_config: Optional[DeepLearningConfig] = None,
