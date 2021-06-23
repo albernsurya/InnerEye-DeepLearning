@@ -237,7 +237,7 @@ def get_or_create_python_environment(azure_config: AzureConfig,
     # Hashing should include everything that can reasonably change. Rely on hashlib here, because the built-in
     # hash function gives different results for the same string in different python instances.
     hash_string = "\n".join([merged_yaml, azure_config.docker_shm_size, base_image, str(env_variables)])
-    sha1 = hashlib.sha1(hash_string.encode("utf8"))
+    md5 = hashlib.md5 (hash_string.encode("utf8"))
     overall_hash = sha1.hexdigest()[:32]
     unique_env_name = f"InnerEye-{overall_hash}"
     try:
